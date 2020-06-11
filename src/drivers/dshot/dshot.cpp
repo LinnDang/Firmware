@@ -127,8 +127,6 @@ public:
 	/** @see ModuleBase */
 	static int print_usage(const char *reason = nullptr);
 
-	void Run() override;
-
 	/** @see ModuleBase::print_status() */
 	int print_status() override;
 
@@ -165,6 +163,9 @@ public:
 	bool telemetryEnabled() const { return _telemetry != nullptr; }
 
 private:
+
+	void Run() override;
+
 	static constexpr uint16_t DISARMED_VALUE = 0;
 
 	enum class DShotConfig {
@@ -603,6 +604,7 @@ void DShotOutput::handleNewTelemetryData(int motor_index, const DShotTelemetry::
 		++esc_status.counter;
 		// FIXME: mark all ESC's as online, otherwise commander complains even for a single dropout
 		esc_status.esc_online_flags = (1 << esc_status.esc_count) - 1;
+		esc_status.esc_armed_flags = (1 << esc_status.esc_count) - 1;
 
 		_telemetry->esc_status_pub.update();
 
